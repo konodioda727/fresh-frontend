@@ -24,6 +24,8 @@ module.exports = {
       {allowConstantExport: true},
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
     "prettier/prettier": ["error", {}, {
       usePrettierrc: true,
       fileInfoOptions: {}

@@ -12,6 +12,7 @@
     "commit": "./node_modules/cz-customizable/standalone.js"
   },
   "dependencies": {
+    "antd": "^5.7.0",
     "axios": "^1.4.0",
     "classes": "^0.3.0",
     "framer-motion": "^10.12.20",

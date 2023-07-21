@@ -26,22 +26,6 @@ axiosInstance.interceptors.response.use(
       const status = error.response.status;
       const responseData = error.response.data;
       console.error('status:',status,"err:",responseData);
-      if (status === 404) {
-        console.error('路径写对没？');
-      } else if (status === 401) {
-        console.error('token带了没？');
-      } else if (status === 400) {
-        console.error('发的很好，下次别再发了');
-      } else if (status === 405) {
-        console.error('根本就没这方法');
-      } else if (status === 403) {
-        console.error('你小子被forbidden了');
-      } else if (status === 500) {
-        console.error('我觉得不是你的问题');
-      } else {
-        console.error('Error Status:', status);
-        console.error('Error Data:', responseData);
-      }
     } else if (error.request) {
       console.error('No response:', error.request);
     } else {

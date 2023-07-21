@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const New: React.FC = () => {
-    return (
-        <>
-        new
-        </>
-    )
-}
+  return <>new</>;
+};
 
-export default New
+export default New;

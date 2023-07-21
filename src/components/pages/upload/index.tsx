@@ -20,9 +20,13 @@ const Upprops: UploadProps = {
       console.log(info.file, info.fileList);
     }
     if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
+      message
+        .success(`${info.file.name} file uploaded successfully.`)
+        .then((res) => console.log(res));
     } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      message
+        .error(`${info.file.name} file upload failed.`)
+        .then((res) => console.log(res));
     }
   },
   onDrop(e) {

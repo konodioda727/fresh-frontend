@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const Browse: React.FC = () => {
-    return (
-        <>
-        Browse
-        </>
-    )
-}
+  return <>Browse</>;
+};
 
-export default Browse
+export default Browse;

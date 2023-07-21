@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const Edit: React.FC = () => {
-    return (
-        <>
-        edit
-        </>
-    )
-}
+  return <>edit</>;
+};
 
-export default Edit
+export default Edit;

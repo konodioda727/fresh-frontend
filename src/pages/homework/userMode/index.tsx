@@ -1,12 +1,11 @@
 import React from 'react';
-import Uploader from '../../../components/pages/upload';
+import UploadSection from '../../../components/pages/uploadWrap';
 
 const HomeworkUserMode: React.FC = () => {
   return (
-    <>
-      usermode
-      <Uploader onClick={() => console.log('clicked')}></Uploader>
-    </>
+    <div style={{display:'flex'}}>
+      <UploadSection title='作业' status button_title='提交作业'></UploadSection>
+    </div>
   );
 };
 

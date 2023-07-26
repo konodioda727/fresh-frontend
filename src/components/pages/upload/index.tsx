@@ -1,57 +1,80 @@
-import React, { HTMLAttributes } from 'react';
-import { InboxOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { message, Upload } from 'antd';
-
-const { Dragger } = Upload;
+import { Button, Upload, ConfigProvider,message } from 'antd';
+import type { UploadFile,  RcFile } from 'antd/es/upload/interface';
 
 interface UploaderProps {
-  upload_text?: string;
-  upload_hint?: string;
+  className?: string;
+  onChange: (files: FormData)=> void;
 }
+const Uploader: React.FC<UploaderProps> = (props) => {
+  const { className, onChange } = props;
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: '-1',
+      name: 'xxx.png',
+      status: 'done',
+      url: 'http://www.baidu.com/xxx.png',
+    },
+  ]);
 
-const Upprops: UploadProps = {
-  name: 'file',
-  multiple: true,
-  action: 'https://localhost:5713',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
+  const handleChange: UploadProps['onChange'] = (info) => {
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
     }
-    if (status === 'done') {
-      message
-        .success(`${info.file.name} file uploaded successfully.`)
-        .then((res) => console.log(res));
-    } else if (status === 'error') {
-      message
-        .error(`${info.file.name} file upload failed.`)
-        .then((res) => console.log(res));
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
+    let newFileList = [...info.fileList];
+    const formData = new FormData();
+    newFileList.forEach((file) => {
+      formData.append('files[]', file as RcFile);
+    });
+    onChange(formData);
+    // newFileList = newFileList.slice(-3);
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        file.url = file.response.url;
+      }
+      return file;
+    });
+    setFileList(newFileList);
+  };
 
-const Uploader: React.FC<UploaderProps & HTMLAttributes<HTMLDivElement>> = (props) => {
-  const { upload_text, upload_hint, ...restProps } = props;
+  const actionProps: UploadProps = {
+    onChange: handleChange,
+    multiple: true,
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false;
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
+    }
+  };
   return (
-    <div {...restProps}>
-      <Dragger {...Upprops}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">
-          {upload_text ? upload_text : '点击或拖拽文件到此处以上传文件'}
-        </p>
-        <p className="ant-upload-hint">
-          {upload_hint
-            ? upload_hint
-            : 'Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.'}
-        </p>
-      </Dragger>
-    </div>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#F79B2E',
+        },
+      }}
+    >
+      <Upload {...actionProps} fileList={fileList} className={className}>
+        <Button icon={<UploadOutlined />}>上传</Button>
+      </Upload>
+    </ConfigProvider>
   );
 };
 

@@ -15,10 +15,10 @@ const HomeworkAdminMode: React.FC = () => {
     setCurrent(e.key);
   };
   return (
-    <>
-      <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
+    <div style={{display:'flex'}}>
+      <Menu onClick={onClick} selectedKeys={[current]} mode='vertical' items={items} style={{width:'232px'}}/>
       <div className="comp">{DynamicComp}</div>
-    </>
+    </div>
   );
 };
 

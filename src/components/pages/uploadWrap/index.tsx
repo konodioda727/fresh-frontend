@@ -1,80 +1,121 @@
-import React, {useState, CSSProperties} from 'react';
-import { ConfigProvider, Button } from 'antd';
+import React, { useState, CSSProperties } from 'react';
+import { Card, UploadProps } from 'antd';
 import InputBox from '../input';
-import './index.less'
-import axiosInstance from '../../../services/interceptor';
+import './index.less';
+import Submit from '../button';
+import DropDown from '../dropDown';
+import Title from '../title';
+import { taskListType, choiceType } from '../../../types';
 interface UploadSectionProps {
   title?: string;
   status?: boolean;
-  url?: string;
   className?: string;
   style?: CSSProperties;
   button_title?: string;
+  choice: choiceType;
+  taskList?: taskListType[];
+  loading?: boolean;
+  onSubmit?: (query:any) => void;
+  children?: React.ReactNode;
+  submitClass?: string;
+  onSwitch?: (item: any) => void;
 }
-const rootUrl = 'api/v1'
 
-
+type defaultType = {
+  title_text: string,
+  content: string,
+  urls: string[]
+}
 const UploadSection: React.FC<UploadSectionProps> = (props) => {
-  const { title,status,url,className,style,button_title } = props;
-  const [formData, setformData] = useState<FormData>(new FormData())
-  const handleChangeTitle = (e:string | FormData) => {
-    let newFormData: FormData = formData as FormData;
-    newFormData.set('title',e as string)
-    setformData(newFormData)
-  }
-  const handleChangeContent = (e:string | FormData) => {
-    let newFormData: FormData = formData as FormData;
-    newFormData.set('content',e as string)
-    setformData(newFormData)
-  }
-  const handleChangeUpload = (e:string | FormData) => {
-    let newFormData: FormData = formData as FormData;
-    if (e instanceof FormData) {
-      const filesArray = Array.from(e.getAll('files[]'));
-      for (const file of filesArray) {
-        newFormData.set('files[]', file);
-      }
+  const { title,onSwitch,submitClass,children,onSubmit,loading, status, className, style, button_title, choice, taskList } = props;
+  const [formData, setformData] = useState<any>();
+  const [defaultValue, setDefaultValue] = useState<defaultType>({title_text:'',content:'',urls:['']})
+  const [formTitle, setFormTitle] = useState<any>()
+  const [formContent, setFormContent] = useState<string>()
+  const root = "http://ossfresh-test.muxixyz.com/"
+  
+  const handleChangeTitle = (e: taskListType ) => {
+    if(choice.includes('edit') ) {
+      setFormTitle({title_text: e.text, assignedTaskID: e.id})
+      return;
     }
-    setformData(newFormData);
+    setFormTitle({title_text: e.text})
+    
+  };
+  const handleSwitch = (e:defaultType,id:string) => {
+    if(e) {
+      setDefaultValue(e)
+      onSwitch && onSwitch(id)
+    }
+    
   }
-  const handleSubmit = () =>{
-    axiosInstance.post(rootUrl + url, formData, {
-      headers:{
-        'Content-Type': 'multipart/form-data'
-      }
+  const handleChangeContent = (e: string  ) => {
+    setFormContent(e)
+  };
+  const handleChangeUpload = (e: UploadProps['fileList'] ) => {
+    const tmpList = e?.map(item=>{
+      if(item?.response)
+        return root + item.response.key
+      else 
+        return item.name
     })
-  }
+    setformData(tmpList);
+  };
+  const handleSubmit = () => {
+    const query = {
+      ...formTitle,
+      content: formContent,
+      urls: formData
+    }
+    onSubmit && onSubmit(query)
+  };
+  
   return (
     <>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#F79B2E',
-          },
-        }}
-      >
-        <div className={"upload-wrap "+ className} style={style}>
-          <div className="upload-title">
-            <div className="upload-title-text">
-              {title}
-              {typeof(status) != 'undefined' && <div className='upload-status'>{status?`已提交`:`未提交`}</div>}
-            </div>
-            <div className="upload-title-deco"></div>
-            <InputBox label="标题" type="input" className="inp" limit={30} onChange={handleChangeTitle}></InputBox>
+        <Card title={
+
+          <Title extra={
+          <>
+            {typeof status != 'undefined' && (
+              <div className="upload-status">{status ? `已提交` : `未提交`}</div>
+            )}
+          </>} title={title}></Title>
+
+        } className={'upload-wrap ' + (className as string)} 
+        style={style}
+        loading={loading}
+        >
+          <div className='upload-upload'>
+          {choice.includes('new')
+          ? <InputBox defaultValue={[defaultValue.title_text]} label="标题" type="input" className="inp more" limit={30} onChange={(str)=>handleChangeTitle({id:'',text:str as string})}></InputBox>
+          : <DropDown type={choice.includes('user')?'user':'admin'} onSwitch={handleSwitch} data={taskList as taskListType[]} onChoose={(e)=>handleChangeTitle(e)}></DropDown>}
             <InputBox
               label="内容简介"
               type="textarea"
               className="inp"
               limit={500}
-              onChange={handleChangeContent}
+              defaultValue={[defaultValue.content]}
+              onChange={(str)=>handleChangeContent(str as string)}
+              task_id={formData?.assignedTaskID}
+              disabled={choice.includes('user')?true:false}
             ></InputBox>
-            <InputBox label="添加附件" type="file" className="inp" onChange={handleChangeUpload}></InputBox>
+            <InputBox
+              label="附件"
+              type="file"
+              className="inp"
+              onChange={(files)=>handleChangeUpload(files as UploadProps['fileList'])}
+              defaultValue={defaultValue.urls}
+              disabled={choice.includes('user')?true:false}
+            ></InputBox>
+            {children}
+            <Submit  className={"submit-page " + submitClass} onClick={handleSubmit}>
+              {button_title}
+            </Submit>
           </div>
-          <Button className="submit" onClick={handleSubmit}>{button_title}</Button>
-        </div>
-      </ConfigProvider>
+          
+        </Card>
     </>
   );
 };
 
-export default UploadSection
+export default UploadSection;

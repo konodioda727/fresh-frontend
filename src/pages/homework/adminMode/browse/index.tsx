@@ -1,14 +1,36 @@
-import React from 'react';
-import './index.less'
+import React, { useState } from 'react';
+import './index.less';
 import Form from '../../../../components/pages/table';
+import Selector from '../../../../components/pages/selector';
+import { defData } from '../../../../components/pages/submitPage';
+import { dataType, taskListType } from '../../../../types';
+import axiosInstance from '../../../../services/interceptor';
+import { Collapse, CollapseProps } from 'antd';
 
-const Browse: React.FC = () => {
-  
+const HomeworkBrowse: React.FC = () => {
+  const [taskList, setTaskList] = useState<CollapseProps['items']>([])
+  const handleChange = (item: dataType): void => {
+    axiosInstance.get(`/task/assigned/list?group=${item.value}`)
+    .then(res=>{
+      let Res = res.data.data.titles as taskListType[]
+      if(Res) {
+        const tasks: CollapseProps['items'] = Res.map(item=>{
+          return {
+            key: item.id,
+            label: item.text,
+            children: <Form></Form>,
+          }
+        })
+        setTaskList(tasks as CollapseProps['items'])
+      }
+    })
+  }
   return (
-    <>
-    <Form ></Form>
-    </>
+    <div className='browse-wrap'>
+    <Selector title='选择组别' data={defData} onChange={(item)=>handleChange(item as dataType)}></Selector>
+    <Collapse items={taskList}></Collapse>
+    </div>
   );
 };
 
-export default Browse;
+export default HomeworkBrowse;

@@ -1,10 +1,12 @@
 import React from 'react';
-import UploadSection from '../../../components/pages/uploadWrap';
+import { Outlet } from 'react-router-dom';
+
 
 const HomeworkUserMode: React.FC = () => {
+ 
   return (
-    <div style={{display:'flex'}}>
-      <UploadSection title='作业' status button_title='提交作业'></UploadSection>
+    <div style={{ display: 'flex' }}>
+      <Outlet></Outlet>
     </div>
   );
 };

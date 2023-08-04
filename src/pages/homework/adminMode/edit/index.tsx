@@ -1,16 +1,14 @@
-import React from 'react';
-import './index.less'
-import Selector from '../../../../components/pages/selector';
-import UploadSection from '../../../../components/pages/uploadWrap';
+import React from 'react'
+import HomeworkSubmit from '../../../../components/pages/submitPage'
+import InputBox from '../../../../components/pages/input'
 
-const Edit: React.FC = () => {
+const HomeworkEdit: React.FC = () => {
   return (
-    <div className='homework-edit-wrap'>
-      <Selector title='组别选择' data={['产品组','前端组','后端组','安卓组','设计组']} className='selector-edit'></Selector>
-      <UploadSection title='修改作业' button_title='确认修改'></UploadSection>
-    </div>
-  );
-};
+    <>
+    <HomeworkSubmit></HomeworkSubmit>
+    
+    </>
+  )
+}
 
-
-export default Edit;
+export default HomeworkEdit

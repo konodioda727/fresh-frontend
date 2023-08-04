@@ -113,7 +113,7 @@ const Form: React.FC<FormProps> = (props) => {
           },
         }}
       >
-        <div style={style} className={'form-wrap' + ' ' + classNames}>
+        <div style={style} className={'form-wrap' + ' ' + (classNames as string)}>
           <Table
             columns={columnConfig ? columnConfig : columns}
             dataSource={dataSet ? dataSet : data}

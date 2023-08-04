@@ -17,7 +17,14 @@
 .pop(@duration) {
     animation: pop @duration ease-in-out forwards;
 }
-
+.colorChange(@duration) {
+    animation: colorChange @duration ease-in-out forwards;
+}
+@keyframes colorChange {
+    100% {
+        background-color: @gray-300;
+    }
+}
 @keyframes pop {
     0% {
         opacity: 0;

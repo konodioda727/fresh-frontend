@@ -1,0 +1,89 @@
+@import '../../../styles/mixin.less';
+@import '../../../styles/variables.less';
+.popover-wrap {
+    display: grid;
+    grid-template-columns: 8% 1fr;
+    align-items: baseline;
+    width: 64vw;
+    margin-left: 8%;
+    .dashin(.6s, horizontal);
+    .input-label {
+        height: 2vh;
+        color: @gray-600;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+    }
+    .popover {
+        width: 56.6%;
+        margin: 2.4%;
+    }
+    
+}
+
+.drop-input {
+    margin-left: 8%;
+    color: @gray-200;
+    .input-element {
+        background-color: @gray-200;
+    }
+}
+#drop-down-list {
+    width: 24vw;
+    max-height: 34vh;
+    .drop-list-common;
+}
+#drop-down-list-user {
+    width: 24vw;
+    max-height: 28vh;
+    .drop-list-common;
+}
+#button {
+    background-color: @gray-200;
+    color: @gray-500;
+    box-shadow: none;
+    border: 1px dashed @gray-200;
+    &:hover {
+        border: 1px dashed @orange;
+        color: @orange;
+    }
+}
+.drop-list-common {
+    .drop-list-wrap {
+        height: 26vh;
+        overflow-y: auto;
+        .drop-item-wrap {
+        &:hover {
+            .colorChange(.4s);
+        }
+        .drop-down-list-item {
+            width: 30vw;
+            height: 3vh;
+            text-align: center;
+            align-items: center;
+            cursor: pointer;
+        }
+    }
+    }
+    
+    .new-task {
+        margin: auto;
+        width: 99%;
+        border: 1px solid @gray-200;
+        background-color: @orange;
+        color: @white;
+        margin-top: 3vh;
+        &:hover {
+            border: 1px solid @orange;
+            color: @orange;
+            animation: colorchange .3s ease-in-out forwards;
+            @keyframes colorchange {
+                100% {
+                    color: @orange;
+                    background-color: #fff;
+                }
+            }
+        }
+    }
+}
